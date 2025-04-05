@@ -4,6 +4,8 @@ A simple website for tracking and sharing restaurants with circular tables.
 
 ## About
 
+Everything you see is written by Cursor so don't judge it too much yet
+
 This project allows users to mark and track restaurants that have circular tables on an interactive map. Users can:
 
 - Add restaurants by name, address, and notes
