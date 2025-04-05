@@ -1,0 +1,221 @@
+/* Custom styles for Restaurants with Circular Tables */
+
+html, body {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+}
+
+#map {
+    z-index: 1;
+    min-height: calc(100vh - 110px); /* Adjust for header and footer */
+}
+
+/* Logo and circular design elements */
+.logo-circle {
+    width: 38px;
+    height: 38px;
+    background-color: rgba(255, 255, 255, 0.2);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.1);
+}
+
+.circular-button {
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 20px;
+    transition: all 0.2s;
+}
+
+.circular-button:hover {
+    transform: scale(1.1);
+}
+
+.circular-close-btn {
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s;
+}
+
+.circular-close-btn:hover {
+    background-color: rgba(0, 0, 0, 0.05);
+}
+
+/* Circular badge for popups */
+.circular-badge {
+    position: absolute;
+    top: -10px;
+    right: -10px;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: radial-gradient(circle, #10b981, #059669);
+    opacity: 0.2;
+    z-index: 0;
+}
+
+/* Circular pattern backgrounds */
+.circular-pattern {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    opacity: 0.1;
+    background-image: radial-gradient(circle at 10% 20%, rgba(255, 255, 255, 0.3) 1px, transparent 1px),
+                     radial-gradient(circle at 30% 60%, rgba(255, 255, 255, 0.3) 2px, transparent 2px),
+                     radial-gradient(circle at 60% 30%, rgba(255, 255, 255, 0.3) 3px, transparent 3px),
+                     radial-gradient(circle at 90% 80%, rgba(255, 255, 255, 0.3) 1px, transparent 1px);
+    background-size: 100px 100px;
+}
+
+.circular-pattern.dark {
+    opacity: 0.05;
+    background-image: radial-gradient(circle at 10% 20%, rgba(255, 255, 255, 0.5) 1px, transparent 1px),
+                     radial-gradient(circle at 30% 60%, rgba(255, 255, 255, 0.5) 2px, transparent 2px),
+                     radial-gradient(circle at 60% 30%, rgba(255, 255, 255, 0.5) 3px, transparent 3px),
+                     radial-gradient(circle at 90% 80%, rgba(255, 255, 255, 0.5) 1px, transparent 1px);
+}
+
+.circular-dot-pattern {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    opacity: 0.05;
+    background-image: radial-gradient(circle at 10% 20%, #059669 1px, transparent 1px),
+                     radial-gradient(circle at 30% 60%, #059669 2px, transparent 2px),
+                     radial-gradient(circle at 60% 30%, #059669 3px, transparent 3px),
+                     radial-gradient(circle at 90% 80%, #059669 1px, transparent 1px);
+    background-size: 100px 100px;
+}
+
+/* Popups and restaurant items */
+.restaurant-popup .leaflet-popup-content-wrapper {
+    border-left: 4px solid #059669;
+    border-radius: 20px;
+    overflow: hidden;
+}
+
+.leaflet-popup-content {
+    position: relative;
+    margin: 0.5rem;
+}
+
+.restaurant-item {
+    border-left: 4px solid #059669;
+    transition: all 0.2s;
+    border-radius: 16px;
+    position: relative;
+    overflow: hidden;
+}
+
+.restaurant-item::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: -2px;
+    transform: translateY(-50%);
+    width: 8px;
+    height: 8px;
+    background-color: #059669;
+    border-radius: 50%;
+}
+
+.restaurant-item:hover {
+    background-color: #f0fdf4;
+    transform: translateX(4px);
+}
+
+/* Custom marker styles */
+.restaurant-marker {
+    border-radius: 50%;
+    border: 2px solid white;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #059669;
+    color: white;
+    font-weight: bold;
+}
+
+.restaurant-marker::before {
+    content: '';
+    position: absolute;
+    width: 40px;
+    height: 40px;
+    border: 2px dashed rgba(255, 255, 255, 0.7);
+    border-radius: 50%;
+    animation: spin 15s linear infinite;
+}
+
+@keyframes spin {
+    from {
+        transform: rotate(0deg);
+    }
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+/* Animation for adding new markers */
+@keyframes pulse {
+    0% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(1.2);
+    }
+    100% {
+        transform: scale(1);
+    }
+}
+
+.pulse {
+    animation: pulse 1s ease-in-out;
+}
+
+/* Overlay panels */
+#add-form-overlay, #restaurant-sidebar {
+    backdrop-filter: blur(5px);
+    transition: all 0.3s ease;
+}
+
+/* Mobile adjustments */
+@media (max-width: 768px) {
+    #restaurant-sidebar {
+        width: calc(100% - 24px);
+        max-height: 300px;
+    }
+    
+    #add-form-overlay {
+        width: calc(100% - 24px);
+    }
+}
+
+.sidebar-collapsed {
+    transform: translateX(calc(100% - 32px));
+}
+
+.sidebar-collapsed .restaurant-item,
+.sidebar-collapsed h2,
+.sidebar-collapsed #no-restaurants {
+    display: none;
+}
+
+.sidebar-collapsed #toggle-sidebar {
+    transform: rotate(180deg);
+} 
