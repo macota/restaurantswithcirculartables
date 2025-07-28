@@ -1,4 +1,47 @@
-import { kv } from '@vercel/kv';
+import { createClient } from 'redis';
+
+// Simple in-memory storage for local development
+let localRestaurants = [];
+
+let redisClient = null;
+
+async function getRedisClient() {
+  if (!redisClient && process.env.REDIS_URL) {
+    redisClient = createClient({
+      url: process.env.REDIS_URL
+    });
+    await redisClient.connect();
+  }
+  return redisClient;
+}
+
+async function getRestaurants() {
+  try {
+    const client = await getRedisClient();
+    if (client) {
+      const data = await client.get('restaurants');
+      return data ? JSON.parse(data) : [];
+    }
+    return localRestaurants;
+  } catch (error) {
+    console.warn('Redis not available, using local storage:', error.message);
+    return localRestaurants;
+  }
+}
+
+async function setRestaurants(data) {
+  try {
+    const client = await getRedisClient();
+    if (client) {
+      await client.set('restaurants', JSON.stringify(data));
+    } else {
+      localRestaurants = data;
+    }
+  } catch (error) {
+    console.warn('Redis not available, using local storage:', error.message);
+    localRestaurants = data;
+  }
+}
 
 export default async function handler(req, res) {
   // Enable CORS
@@ -37,7 +80,7 @@ export default async function handler(req, res) {
 // GET /api/restaurants - Get all restaurants
 async function handleGet(req, res) {
   try {
-    const restaurants = await kv.get('restaurants') || [];
+    const restaurants = await getRestaurants();
     res.status(200).json(restaurants);
   } catch (error) {
     console.error('Error getting restaurants:', error);
@@ -54,7 +97,7 @@ async function handlePost(req, res) {
   }
 
   try {
-    const restaurants = await kv.get('restaurants') || [];
+    const restaurants = await getRestaurants();
     
     const newRestaurant = {
       id: Date.now().toString(),
@@ -67,7 +110,7 @@ async function handlePost(req, res) {
     };
 
     restaurants.push(newRestaurant);
-    await kv.set('restaurants', restaurants);
+    await setRestaurants(restaurants);
 
     res.status(201).json(newRestaurant);
   } catch (error) {
@@ -85,7 +128,7 @@ async function handlePut(req, res) {
   }
 
   try {
-    const restaurants = await kv.get('restaurants') || [];
+    const restaurants = await getRestaurants();
     const index = restaurants.findIndex(r => r.id === id);
 
     if (index === -1) {
@@ -102,7 +145,7 @@ async function handlePut(req, res) {
       lng: lng !== undefined ? parseFloat(lng) : restaurants[index].lng,
     };
 
-    await kv.set('restaurants', restaurants);
+    await setRestaurants(restaurants);
 
     res.status(200).json(restaurants[index]);
   } catch (error) {
@@ -120,14 +163,14 @@ async function handleDelete(req, res) {
   }
 
   try {
-    const restaurants = await kv.get('restaurants') || [];
+    const restaurants = await getRestaurants();
     const filteredRestaurants = restaurants.filter(r => r.id !== id);
 
     if (filteredRestaurants.length === restaurants.length) {
       return res.status(404).json({ error: 'Restaurant not found' });
     }
 
-    await kv.set('restaurants', filteredRestaurants);
+    await setRestaurants(filteredRestaurants);
 
     res.status(200).json({ message: 'Restaurant deleted successfully' });
   } catch (error) {
