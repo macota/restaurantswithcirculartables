@@ -24,17 +24,39 @@ This project allows users to mark and track restaurants that have circular table
 ## Technology Stack
 
 - HTML5
-- JavaScript (vanilla, no frameworks)
+- JavaScript (vanilla, no frameworks)  
 - Tailwind CSS for styling
-- Leaflet.js for maps
-- OpenStreetMap for map tiles
-- Nominatim for geocoding
+- Google Maps JavaScript API for maps
+- Vercel Functions for serverless API
+- Vercel KV for data storage
 
 ## Getting Started
 
+### Local Development
+
 1. Clone this repository
-2. Open `index.html` in your browser
-3. Start adding your favorite restaurants with circular tables!
+2. Install dependencies:
+   ```bash
+   npm install
+   ```
+3. Make sure you have a `.env` file with your Google Maps API key:
+   ```
+   GOOGLE_API_KEY=your_api_key_here
+   ```
+4. Run the development server:
+   ```bash
+   npm run dev
+   ```
+5. Open your browser to `http://localhost:3000`
+
+The `vercel dev` command will:
+- Serve static files 
+- Run the API functions locally
+- Handle environment variables from `.env`
+
+### Production Deployment
+
+This app is designed to be deployed on Vercel. Simply connect your GitHub repository to Vercel and it will automatically deploy with each push.
 
 ## Future Enhancements
 

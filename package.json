@@ -4,12 +4,21 @@
   "description": "A web app for tracking restaurants with circular tables",
   "main": "index.html",
   "dependencies": {
+    "@tailwindcss/cli": "^4.1.11",
     "@vercel/kv": "^1.0.1",
     "redis": "^5.6.1"
   },
+  "devDependencies": {
+    "autoprefixer": "^10.4.16",
+    "http-server": "^14.1.1",
+    "postcss": "^8.4.31",
+    "tailwindcss": "^3.4.17"
+  },
   "scripts": {
-    "dev": "python -m http.server 3000",
-    "start": "python -m http.server 8080"
+    "build-css": "tailwindcss -i ./src/input.css -o ./src/output.css --watch",
+    "build": "tailwindcss -i ./src/input.css -o ./src/output.css",
+    "dev": "npx http-server . -p 3000 -c-1",
+    "start": "npx http-server . -p 8080 -c-1"
   },
   "keywords": [
     "restaurants",

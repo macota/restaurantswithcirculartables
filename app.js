@@ -91,7 +91,10 @@ async function initializeApp() {
 async function loadRestaurants() {
     try {
         const response = await fetch('/api/restaurants');
-        restaurants = await response.json();
+        const data = await response.json();
+        
+        // Ensure we have an array
+        restaurants = Array.isArray(data) ? data : [];
         
         // Add markers for all restaurants
         restaurants.forEach(restaurant => {
