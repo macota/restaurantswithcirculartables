@@ -4,6 +4,14 @@ let restaurants = [];
 let markers = {};
 let infoWindow;
 
+// Global callback for Google Maps API
+window.initGoogleMaps = function() {
+    if (window._mapsLoadResolve) {
+        window._mapsLoadResolve();
+        delete window._mapsLoadResolve;
+    }
+};
+
 // Initialize the application
 document.addEventListener('DOMContentLoaded', async function() {
     try {
@@ -15,7 +23,7 @@ document.addEventListener('DOMContentLoaded', async function() {
             throw new Error('Failed to load Google Maps API key');
         }
 
-        // Dynamically load Google Maps API
+        // Dynamically load Google Maps API with proper async loading
         await loadGoogleMaps(config.apiKey);
         
         // Initialize the map and load restaurants
@@ -35,12 +43,16 @@ function loadGoogleMaps(apiKey) {
         }
 
         const script = document.createElement('script');
-        script.src = `https://maps.googleapis.com/maps/api/js?key=${apiKey}&libraries=places`;
+        script.src = `https://maps.googleapis.com/maps/api/js?key=${apiKey}&libraries=places&loading=async&callback=initGoogleMaps`;
         script.async = true;
         script.defer = true;
         
-        script.onload = resolve;
-        script.onerror = reject;
+        script.onerror = () => {
+            reject(new Error('Failed to load Google Maps API'));
+        };
+        
+        // The resolve will be called by the global callback
+        window._mapsLoadResolve = resolve;
         
         document.head.appendChild(script);
     });
