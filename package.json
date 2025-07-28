@@ -1,0 +1,16 @@
+{
+  "name": "restaurants-with-circular-tables",
+  "version": "1.0.0",
+  "description": "A web app for tracking restaurants with circular tables",
+  "main": "index.html",
+  "dependencies": {
+    "@vercel/kv": "^1.0.1"
+  },
+  "scripts": {
+    "dev": "python -m http.server 3000",
+    "start": "python -m http.server 8080"
+  },
+  "keywords": ["restaurants", "maps", "google-maps"],
+  "author": "",
+  "license": "MIT"
+}
